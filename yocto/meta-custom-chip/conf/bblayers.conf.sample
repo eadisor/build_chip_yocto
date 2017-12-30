@@ -1,0 +1,20 @@
+# LAYER_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+LCONF_VERSION = "6"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS ?= " \
+  ##OEROOT##/../poky/meta \
+  ##OEROOT##/../poky/meta-yocto \
+  ##OEROOT##/../meta-openembedded/meta-oe \
+  ##OEROOT##/../meta-chip \
+  ##OEROOT##/../meta-sunxi \
+  ##OEROOT##/../meta-custom-chip \
+  "	
+  
+BBLAYERS_NON_REMOVABLE ?= " \
+  ##OEROOT##/../poky/meta \
+  ##OEROOT##/../poky/meta-yocto \
+  "
