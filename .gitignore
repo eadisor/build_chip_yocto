@@ -1,2 +1,7 @@
-./build/*
+build/
+yocto/meta-chip/
+yocto/meta-openembedded/
+yocto/meta-sunxi/
+yocto/poky/
+
 
