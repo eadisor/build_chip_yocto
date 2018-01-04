@@ -1,0 +1,46 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          
+# Required-Start:    
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: 
+# Description:       
+### END INIT INFO
+
+
+[ -f /etc/default/rcS ] && . /etc/default/rcS
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+PROGRAM=/usr/lib/bluez5/bluetooth/bluetoothd
+
+test -x $PROGRAM || exit 0
+
+case "$1" in
+  start)
+	echo "Starting Bluetooth"
+	sleep 4
+	/usr/lib/bluez5/bluetooth/bluetoothd &
+	echo "Done starting bluetooth"
+	sleep 3
+	/sbin/bt_reset 
+	/sbin/rtk_hciattach -n -s 115200 /dev/ttyS1 rtk_h5 &
+	sleep 10
+	;;
+  stop)
+	killall bluetoothd
+	killall rtk_hciattach
+	;;
+  force-reload|restart)
+	$0 start
+	;;
+  status)
+	exit 0
+	;;
+  *)
+	echo "Usage: "$0" {start|stop|restart|force-reload|status}"
+	exit 1
+esac
+
+exit 0

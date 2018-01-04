@@ -1,0 +1,52 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          
+# Required-Start:    
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: 
+# Description:       
+### END INIT INFO
+
+
+[ -f /etc/default/rcS ] && . /etc/default/rcS
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+PROGRAM=
+
+test -x $PROGRAM || exit 0
+
+case "$1" in
+  start)
+	echo "Starting Pulseaudio"
+	chmod 0777 /dev/snd/*
+	#/usr/bin/pulseaudio -D --realtime=false --high-priority=false --system --disallow-module-loading=false -vvvv --log-meta --disallow-exit
+	(while true; do 
+	        /usr/bin/pulseaudio --realtime=false --high-priority=false --system --disallow-module-loading=false --log-meta > /dev/null
+	done) &
+
+	#sleep 5
+	#pactl unload-module module-bluetooth-discover
+	#pactl load-module module-bluetooth-discover
+	#pactl load-module module-bluetooth-policy 
+	#pactl load-module module-switch-on-connect
+	#pactl unload-module module-alsa-sink 
+	#pactl load-module module-alsa-sink device="hw:0"
+	
+	;;
+  stop)
+	killall pulseaudio
+	;;
+  force-reload|restart)
+	$0 start
+	;;
+  status)
+	exit 0
+	;;
+  *)
+	echo "Usage: "$0" {start|stop|restart|force-reload|status}"
+	exit 1
+esac
+
+exit 0

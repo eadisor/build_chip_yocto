@@ -1,0 +1,47 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          
+# Required-Start:    
+# Required-Stop:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: 
+# Description:       
+### END INIT INFO
+
+
+[ -f /etc/default/rcS ] && . /etc/default/rcS
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+PROGRAM=
+
+test -x $PROGRAM || exit 0
+
+case "$1" in
+  start)
+    echo "Starting Bluetooth auto trust device"
+    (while true; do 
+            NEW_DEVICE=`dbus-monitor --system  | grep -C 1 -m 1 'InterfacesAdded' |   grep -o 'dev_.._.._.._.._.._..'`
+            echo 'new device detected on dbus system: '$NEW_DEVICE
+            echo 'trusting it.'
+            dbus-send --system --dest=org.bluez --print-reply /org/bluez/hci0/$NEW_DEVICE \
+              org.freedesktop.DBus.Properties.Set \
+              string:org.bluez.Device1 string:Trusted variant:boolean:true
+    done) &
+    
+    ;;
+  stop)
+    :
+    ;;
+  force-reload|restart)
+    $0 start
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: "$0" {start|stop|restart|force-reload|status}"
+    exit 1
+esac
+
+exit 0
